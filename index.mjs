@@ -57,7 +57,6 @@ app.post('/user',(req,res)=>{
 // PUT request end
 
 // Delete reuest start
-
 app.delete('/user/:id', (req, res) => {
     try {
         let index = users.findIndex(v => v.id === Number(req.params.id));
@@ -72,6 +71,9 @@ app.delete('/user/:id', (req, res) => {
         return res.status(500).send("An error occurred while deleting the user");
     }
 });
+
+
+
 
 // Delete request end
 

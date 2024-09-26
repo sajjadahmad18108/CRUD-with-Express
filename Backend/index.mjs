@@ -1,7 +1,10 @@
 import express from 'express'
+import cors from 'cors'
 
 
 const PORT = 3000
+// Use CORS middleware
+app.use(cors());
 
 const app = express()
 app.use(express.json());

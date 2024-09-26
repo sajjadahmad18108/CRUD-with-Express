@@ -1,73 +1,60 @@
-import express from 'express'
-import cors from 'cors'
+import express from 'express';
+import cors from 'cors';
 
+const app = express();
+const PORT = 3000;
 
-const PORT = 3000
-// Use CORS middleware
 app.use(cors());
-
-const app = express()
 app.use(express.json());
 
 const users = [
     {
         id: 1,
         name: "sajjad",
-        email:"sajjad@gmail.com"
+        email: "sajjad@gmail.com"
     },
     {
         id: 2,
         name: "ahmad",
-        email:"ahmad@gmail.com"
-    },
-]
-
-app.get('/user',(req, res)=>{
-      res.send(users)
-})
-  
-//  Post request 
-app.post('/user',(req,res)=>{
-    try{
-        const {name , email} = req.body
-        if(name && email){
-            users.push({id:users.length +1 , ...req.body})
-            res.status(200).send({status:200, message:"user added sucessfully"})
-        }else{
-            res.status(403).send({status:403 , message:"Email and name is required"})
-        }     
+        email: "ahmad@gmail.com"
     }
-   catch(e){
-        res.status(400).send({status:400, message: e})  
-   }
-    
-})
+];
 
-// POst request end 
+app.get('/user', (req, res) => {
+    res.send(users);
+});
 
-// PUT request start
+// POST request
+app.post('/user', (req, res) => {
+    try {
+        const { name, email } = req.body;
+        if (name && email) {
+            const newUser = { id: users.length + 1, name, email };
+            users.push(newUser);
+            res.status(200).send(newUser); // Send the new user object as response
+        } else {
+            res.status(403).send({ status: 403, message: "Email and name are required" });
+        }
+    } catch (e) {
+        res.status(400).send({ status: 400, message: e.message });
+    }
+});
 
-
-app.put('/user/:id', (req,res)=>{
-    // console.log(req.params.id)
-    let index=users.findIndex(v=> v.id === Number(req.params.id))
-    // console.log("index===>", index)
-    if(index !== -1){
-          users.splice(index ,0 , {id:Number(req.params.id) , ...req.body})
-          return res.status(200).send("The user was Update successfully")
-    }else{
+// PUT request (update user)
+app.put('/user/:id', (req, res) => {
+    const index = users.findIndex(v => v.id === Number(req.params.id));
+    if (index !== -1) {
+        users[index] = { id: Number(req.params.id), ...req.body };
+        return res.status(200).send(users[index]); // Send the updated user object
+    } else {
         return res.status(404).send("User not found");
     }
+});
 
-})
-
-// PUT request end
-
-// Delete reuest start
+// DELETE request
 app.delete('/user/:id', (req, res) => {
     try {
-        let index = users.findIndex(v => v.id === Number(req.params.id));
-        
+        const index = users.findIndex(v => v.id === Number(req.params.id));
         if (index !== -1) {
             users.splice(index, 1);
             return res.status(200).send("The user was deleted successfully");
@@ -79,12 +66,6 @@ app.delete('/user/:id', (req, res) => {
     }
 });
 
-
-
-
-// Delete request end
-
-
-app.listen(PORT, ()=>{
-    console.log(`The server is runing on http://localhost:${PORT}`)
-})
+app.listen(PORT, () => {
+    console.log(`The server is running on http://localhost:${PORT}`);
+});

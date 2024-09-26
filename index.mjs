@@ -45,14 +45,18 @@ app.post('/user',(req,res)=>{
 // PUT request start
 
 
-// app.put('/user/:id', (req,res)=>{
-//     // console.log(req.params.id)
-//     let index=users.findIndex(v=> v.id ===Number(req.params.id))
-//     // console.log("index===>", index)
-//     if(index !== -1){
+app.put('/user/:id', (req,res)=>{
+    // console.log(req.params.id)
+    let index=users.findIndex(v=> v.id === Number(req.params.id))
+    // console.log("index===>", index)
+    if(index !== -1){
+          users.splice(index ,0 , {id:Number(req.params.id) , ...req.body})
+          return res.status(200).send("The user was Update successfully")
+    }else{
+        return res.status(404).send("User not found");
+    }
 
-//     }
-// })
+})
 
 // PUT request end
 
